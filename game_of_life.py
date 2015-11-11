@@ -12,12 +12,13 @@ size_cell = 5
 cells_by_side = 70
 nb_fps = 30
 side_win = size_cell*cells_by_side
+initial = 'random'	# 'random'
 
 pygame.init()
 
 # import image
-brick = pygame.image.load("brick.png")
-b_brick = pygame.image.load("black_brick.png")
+brick = pygame.image.load('brick.png')
+b_brick = pygame.image.load('black_brick.png')
 
 # scale image
 brick = pygame.transform.scale(brick, (size_cell, size_cell))
@@ -76,7 +77,6 @@ def glider(x, y):
 			grid[a[i], b[i]] = 1
 			create_brick(a[i], b[i])
 
-glider(12,60)
 
 def pulsar(x, y):
 		""" place a pulsar at (x, y) """
@@ -94,7 +94,6 @@ def pulsar(x, y):
 			grid[a[i], b[i]] = 1
 			create_brick(a[i], b[i])
 
-pulsar(20, 20)
 
 def glider_gun(x, y):
 		""" place a glider gun at (x, y) """
@@ -112,7 +111,31 @@ def glider_gun(x, y):
 			grid[a[i], b[i]] = 1
 			create_brick(a[i], b[i])
 
-glider_gun(20, 20)
+def rand_init():
+		""" initialise the game randomly """
+
+		a = np.random.randint(cells_by_side, size=cells_by_side)
+		b = np.random.randint(cells_by_side, size=cells_by_side)
+
+		for i in range(len(a)):
+			grid[a[i], b[i]] = 1
+			create_brick(a[i], b[i])
+
+if initial == 'custom':
+
+	step = 5
+	for i in range(1,7):
+		glider(i*step,20)
+
+	pulsar(50, 20)
+	glider_gun(1, 1)
+
+elif initial == 'random':
+
+	# increase this integer to have a more populated random initial population
+	rand_density = 10
+	for i in range(rand_density):
+		rand_init()
 
 # refresh screen
 pygame.display.flip()
@@ -130,24 +153,24 @@ while run_game:
 				if event.type == KEYDOWN and event.key == K_SPACE:
 						run_game = 0
 
-		# for x in range(0, len(grid)-1):
-				# for y in range(0, len(grid)-1):
+		for x in range(0, len(grid)-1):
+				for y in range(0, len(grid)-1):
 
-						# if number_neighbours(x, y, old_grid) < [2]:
-								# grid[x, y] = 0
-						# if number_neighbours(x, y, old_grid) == [3]:
-								# grid[x, y] = 1
-						# if number_neighbours(x, y, old_grid) > [3]:
-								# grid[x, y] = 0
+						if number_neighbours(x, y, old_grid) < [2]:
+								grid[x, y] = 0
+						if number_neighbours(x, y, old_grid) == [3]:
+								grid[x, y] = 1
+						if number_neighbours(x, y, old_grid) > [3]:
+								grid[x, y] = 0
 
-		# for x in range(0, len(grid)-1):
-				# for y in range(0, len(grid)-1):
-						# if grid[x, y] == [1]:
-								# create_brick(x, y)
-						# if grid[x, y] == [0]:
-								# delete_brick(x, y)
+		for x in range(0, len(grid)-1):
+				for y in range(0, len(grid)-1):
+						if grid[x, y] == [1]:
+								create_brick(x, y)
+						if grid[x, y] == [0]:
+								delete_brick(x, y)
 
-		# old_grid = copy.deepcopy(grid)
+		old_grid = copy.deepcopy(grid)
 		pygame.display.flip()
 
 
