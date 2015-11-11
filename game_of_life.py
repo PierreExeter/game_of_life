@@ -63,11 +63,11 @@ def number_neighbours(x, y, grid):
 def glider(x, y):
 		""" place a glider at (x, y) """
 
-		if x >= cells_by_side-2 or y >= cells_by_side-2 or x <= 2 or y <= 2:
+		if x >= cells_by_side-2 or y >= cells_by_side-2 or x <= 0 or y <= 0:
 			raise ValueError('The glider is outside the edge of the window!')
 
 		glider_x = [0, 1, 1, 2, 2]
-		glider_y = [0, 1, 2, 2, 1]
+		glider_y = [0, 1, 2, 0, 1]
 
 		a = [i+x for i in glider_x]
 		b = [i+y for i in glider_y]
@@ -76,14 +76,12 @@ def glider(x, y):
 			grid[a[i], b[i]] = 1
 			create_brick(a[i], b[i])
 
-# glider(12,60)
-
-# pulsar
+glider(12,60)
 
 def pulsar(x, y):
 		""" place a pulsar at (x, y) """
 
-		if x >= cells_by_side-12 or y >= cells_by_side-12 or x<= 12 or y<= 12:
+		if x >= cells_by_side-12 or y >= cells_by_side-12 or x<= 0 or y<= 0:
 			raise ValueError('The pulsar is outside the edge of the window!')
 
 		pulsar_x = [2, 3, 4, 8, 9, 10, 0, 5, 7, 12, 0, 5, 7, 12, 0, 5, 7, 12, 2, 3, 4, 8, 9, 10, 2, 3, 4, 8, 9, 10, 0, 5, 7, 12, 0, 5, 7, 12, 0, 5, 7, 12, 2, 3, 4, 8, 9, 10]
@@ -96,18 +94,25 @@ def pulsar(x, y):
 			grid[a[i], b[i]] = 1
 			create_brick(a[i], b[i])
 
-# pulsar(20, 20)
+pulsar(20, 20)
 
-# glider gun
 def glider_gun(x, y):
 		""" place a glider gun at (x, y) """
-		
+
+		if x >= cells_by_side-35 or y >= cells_by_side-8 or x<= 0 or y<= 0:
+			raise ValueError('The glider gun is outside the edge of the window!')
+
 		gg_x = [24, 22, 24, 12, 13, 20, 21, 34, 35, 11, 15, 20, 21, 34, 35, 0, 1, 10, 16, 20, 21, 0, 1, 10, 14, 16, 17, 22, 24, 10, 16, 24, 11, 15, 12, 13]
 		gg_y = [0, 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 7, 7, 8, 8]
 
-		for i in range(len(x)):
-    	grid[x[i], y[i]] = 1
-    	create_brick(x[i], y[i])
+		a = [i+x for i in gg_x]
+		b = [i+y for i in gg_y]
+
+		for i in range(len(a)):
+			grid[a[i], b[i]] = 1
+			create_brick(a[i], b[i])
+
+glider_gun(20, 20)
 
 # refresh screen
 pygame.display.flip()
