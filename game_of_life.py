@@ -12,7 +12,8 @@ size_cell = 5
 cells_by_side = 70
 nb_fps = 30
 side_win = size_cell*cells_by_side
-initial = 'random'	# 'random'
+# set this to either 'random' or 'custom'
+initial = 'random'	# 'custom'
 
 pygame.init()
 
@@ -172,7 +173,4 @@ while run_game:
 
 		old_grid = copy.deepcopy(grid)
 		pygame.display.flip()
-
-
-
 
