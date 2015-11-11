@@ -9,7 +9,7 @@ import copy
 from operator import add
 
 size_cell = 5
-cells_by_side = 70
+cells_by_side = 100
 nb_fps = 30
 side_win = size_cell*cells_by_side
 # set this to either 'random' or 'custom'
@@ -132,7 +132,7 @@ if initial == 'custom':
 elif initial == 'random':
 
     # increase this integer to have a more populated random initial population
-    rand_density = 10
+    rand_density = 20
     for i in range(rand_density):
         rand_init()        
 
