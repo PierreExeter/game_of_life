@@ -8,37 +8,12 @@ import numpy as np
 import copy
 from operator import add
 
-pygame.init()
-
 size_cell = 5
 cells_by_side = 70
+nb_fps = 30
 side_win = size_cell*cells_by_side
 
-def create_brick(x, y):
-    window.blit(brick, (size_cell*x, size_cell*y))
-
-def delete_brick(x, y):
-    window.blit(b_brick, (size_cell*x, size_cell*y))
-
-def number_neighbours(x, y, grid):
-    n = 0
-    if grid[x+1, y] == 1:
-        n = n+1
-    if grid[x+1, y+1] == 1:
-        n = n+1
-    if grid[x, y+1] == 1:
-        n = n+1
-    if grid[x-1, y+1] == 1:
-        n = n+1
-    if grid[x-1, y] == 1:
-        n = n+1
-    if grid[x-1, y-1] == 1:
-        n = n+1
-    if grid[x, y-1] == 1:
-        n = n+1
-    if grid[x+1, y-1] == 1:
-        n = n+1
-    return[n]
+pygame.init()
 
 # import image
 brick = pygame.image.load("brick.png")
@@ -54,35 +29,85 @@ window = pygame.display.set_mode((side_win, side_win))
 # create initial map
 grid = np.zeros((cells_by_side, cells_by_side))
 
-# glider
-x = [1, 2, 2, 3, 3]
-y = [1, 2, 3, 1, 2]
+def create_brick(x, y):
+		""" place white brick at location (x, y) """
+		window.blit(brick, (size_cell*x, size_cell*y))
 
-for i in range(len(x)):
-    grid[x[i], y[i]] = 1
-    create_brick(x[i], y[i])
+def delete_brick(x, y):
+		""" place black birck at location (x, y) """	
+		window.blit(b_brick, (size_cell*x, size_cell*y))
+
+def number_neighbours(x, y, grid):
+		""" return number of neighbourghs for the cell (x, y) in grid """
+		n = 0
+		if grid[x+1, y] == 1:
+			n = n+1
+		if grid[x+1, y+1] == 1:
+			n = n+1
+		if grid[x, y+1] == 1:
+			n = n+1
+		if grid[x-1, y+1] == 1:
+			n = n+1
+		if grid[x-1, y] == 1:
+			n = n+1
+		if grid[x-1, y-1] == 1:
+			n = n+1
+		if grid[x, y-1] == 1:
+			n = n+1
+		if grid[x+1, y-1] == 1:
+			n = n+1    
+		return[n]
+
+# initialise the game of life
+
+def glider(x, y):
+		""" place a glider at (x, y) """
+
+		if x >= cells_by_side-2 or y >= cells_by_side-2 or x <= 2 or y <= 2:
+			raise ValueError('The glider is outside the edge of the window!')
+
+		glider_x = [0, 1, 1, 2, 2]
+		glider_y = [0, 1, 2, 2, 1]
+
+		a = [i+x for i in glider_x]
+		b = [i+y for i in glider_y]
+
+		for i in range(len(a)):
+			grid[a[i], b[i]] = 1
+			create_brick(a[i], b[i])
+
+# glider(12,60)
 
 # pulsar
-x = [12,13,14,18,19,20,10,15,17,22,10,15,17,22,10,15,17,22,12,13,14,18,19,20,12,13,14,18,19,20,10,15,17,22,10,15,17,22,10,15,17,22,12,13,14,18,19,20]
-y = [10,10,10,10,10,10,12,12,12,12,13,13,13,13,14,14,14,14,15,15,15,15,15,15,17,17,17,17,17,17,18,18,18,18,19,19,19,19,20,20,20,20,22,22,22,22,22,22]
 
-for i in range(len(x)):
-    grid[x[i], y[i]] = 1
-    create_brick(x[i], y[i])
+def pulsar(x, y):
+		""" place a pulsar at (x, y) """
+
+		if x >= cells_by_side-12 or y >= cells_by_side-12 or x<= 12 or y<= 12:
+			raise ValueError('The pulsar is outside the edge of the window!')
+
+		pulsar_x = [2, 3, 4, 8, 9, 10, 0, 5, 7, 12, 0, 5, 7, 12, 0, 5, 7, 12, 2, 3, 4, 8, 9, 10, 2, 3, 4, 8, 9, 10, 0, 5, 7, 12, 0, 5, 7, 12, 0, 5, 7, 12, 2, 3, 4, 8, 9, 10]
+		pulsar_y = [0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8, 9, 9, 9, 9, 10, 10, 10, 10, 12, 12, 12, 12, 12, 12]
+
+		a = [i+x for i in pulsar_x]
+		b = [i+y for i in pulsar_y]
+
+		for i in range(len(a)):
+			grid[a[i], b[i]] = 1
+			create_brick(a[i], b[i])
+
+# pulsar(20, 20)
 
 # glider gun
-x = [25,23,25,13,14,21,22,35,36,12,16,21,22,35,36,1,2,11,17,21,22,1,2,11,15,17,18,23,25,11,17,25,12,16,13,14]
-old_y = [31,32,32,33,33,33,33,33,33,34,34,34,34,34,34,35,35,35,35,35,35,36,36,36,36,36,36,36,36,37,37,37,38,38,39,39]
+def glider_gun(x, y):
+		""" place a glider gun at (x, y) """
+		
+		gg_x = [24, 22, 24, 12, 13, 20, 21, 34, 35, 11, 15, 20, 21, 34, 35, 0, 1, 10, 16, 20, 21, 0, 1, 10, 14, 16, 17, 22, 24, 10, 16, 24, 11, 15, 12, 13]
+		gg_y = [0, 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 7, 7, 8, 8]
 
-translate = []
-for i in range(len(old_y)):
-    translate.append(10)
-
-y = map(add, old_y, translate)
-
-for i in range(len(x)):
-    grid[x[i], y[i]] = 1
-    create_brick(x[i], y[i])
+		for i in range(len(x)):
+    	grid[x[i], y[i]] = 1
+    	create_brick(x[i], y[i])
 
 # refresh screen
 pygame.display.flip()
@@ -92,29 +117,34 @@ old_grid = copy.deepcopy(grid)
 
 run_game = 1
 while run_game:
-    # 30 frames per seconds
-    pygame.time.Clock().tick(30)
+		# pygame.time.Clock().tick(nb_fps)
 
-    for event in pygame.event.get():
-        if event.type == QUIT:
-            run_game = 0
+		for event in pygame.event.get():
+				if event.type == QUIT:
+						run_game = 0
+				if event.type == KEYDOWN and event.key == K_SPACE:
+						run_game = 0
 
-    for x in range(0, len(grid)-1):
-        for y in range(0, len(grid)-1):
+		# for x in range(0, len(grid)-1):
+				# for y in range(0, len(grid)-1):
 
-            if number_neighbours(x, y, old_grid) < [2]:
-                grid[x, y] = 0
-            if number_neighbours(x, y, old_grid) == [3]:
-                grid[x, y] = 1
-            if number_neighbours(x, y, old_grid) > [3]:
-                grid[x, y] = 0
+						# if number_neighbours(x, y, old_grid) < [2]:
+								# grid[x, y] = 0
+						# if number_neighbours(x, y, old_grid) == [3]:
+								# grid[x, y] = 1
+						# if number_neighbours(x, y, old_grid) > [3]:
+								# grid[x, y] = 0
 
-    for x in range(0, len(grid)-1):
-        for y in range(0, len(grid)-1):
-            if grid[x, y] == [1]:
-                create_brick(x, y)
-            if grid[x, y] == [0]:
-                delete_brick(x, y)
+		# for x in range(0, len(grid)-1):
+				# for y in range(0, len(grid)-1):
+						# if grid[x, y] == [1]:
+								# create_brick(x, y)
+						# if grid[x, y] == [0]:
+								# delete_brick(x, y)
 
-    old_grid = copy.deepcopy(grid)
-    pygame.display.flip()
+		# old_grid = copy.deepcopy(grid)
+		pygame.display.flip()
+
+
+
+
